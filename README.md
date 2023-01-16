@@ -1,16 +1,45 @@
-# !!!NOT WORKING PROPERLY!!!
+# Stable Diffusion in DirectML
 
-For some unknown reason, gpu acceleration is currently unavailable. All stuff is running on CPU(Tested on R7-6800H).
+Modified version of stable-diffusion-tensorflow project with DirectML support.
 
-# Stable Diffusion in PlaidML
+魔改自stable-diffusion-tensorflow项目
 
-Modified version of stable-diffusion-tensorflow project with PlaidML support.
+Need 12 gigabytes of **RAM** to run it.
+
+需要12GB的**RAM**运行（使用原项目提供的模型条件下）
+
+**(VRAM + RAM >= 12 gigabytes)**
+
+**(即显存 + 内存 >= 12GB)**
 
 The weights were ported from the original implementation.
 
 # Installation & Usage
 
-### Clone this project to install.
+### Clone this project to install
+
+Generation is quite slow for some unknown reasons.
+
+由于某些未知原因，生成速度相当缓慢。
+
+
+需要手动修改后端以提供swish激活函数的支持，即在
+
+`site-packages\tensorflow_core\python\keras\api\_v1\keras\activations\__init__.py`
+
+中 `import sys...`下一行加入
+
+`from tensorflow.python.keras.activations import swish`
+
+并在
+
+`site-packages\tensorflow_core\python\keras\activations.py`
+
+结尾加入
+
+    @keras_export('keras.activations.swish')
+    def swish(x):
+        return nn.sigmoid(x)*x
 
 More testing needed.
 
