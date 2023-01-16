@@ -50,7 +50,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--steps", type=int, default=50, help="number of ddim sampling steps"
+    "--steps", type=int, default=25, help="number of ddim sampling steps"
 )
 
 parser.add_argument(
@@ -70,9 +70,8 @@ args = parser.parse_args()
 
 if args.mp:
     print("Using mixed precision.")
-    keras.mixed_precision.set_global_policy("mixed_float16")
 
-generator = StableDiffusion(img_height=args.H, img_width=args.W, jit_compile=False)
+generator = StableDiffusion(img_height=args.H, img_width=args.W, jit_compile=False, mixed_precision=args.mp)
 img = generator.generate(
     args.prompt,
     negative_prompt=args.negative_prompt,

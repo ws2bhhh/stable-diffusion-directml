@@ -16,7 +16,8 @@ MAX_TEXT_LEN = 77
 
 
 class StableDiffusion:
-    def __init__(self, img_height=1000, img_width=1000, jit_compile=False, download_weights=True):
+    def __init__(self, img_height=512, img_width=512, jit_compile=False, download_weights=True, mixed_precision=False):
+        tf.compat.v1.enable_eager_execution() #mod
         self.img_height = img_height
         self.img_width = img_width
         self.tokenizer = SimpleTokenizer()
@@ -34,8 +35,10 @@ class StableDiffusion:
             self.encoder.compile(jit_compile=True)
 
         self.dtype = tf.float32
-        if tf.keras.mixed_precision.global_policy().name == 'mixed_float16':
-            self.dtype = tf.float16
+        # if tf.keras.mixed_precision.global_policy().name == 'mixed_float16':
+        #     self.dtype = tf.float16
+        if mixed_precision: #mod
+            self.dtype = tf.float16 #mod
 
     def generate(
         self,
@@ -248,23 +251,28 @@ def get_models(img_height, img_width, download_weights=True):
     encoder = keras.models.Model(inp_img, encoder(inp_img))
 
     if download_weights:
-        text_encoder_weights_fpath = keras.utils.get_file(
-            origin="https://huggingface.co/fchollet/stable-diffusion/resolve/main/text_encoder.h5",
-            file_hash="d7805118aeb156fc1d39e38a9a082b05501e2af8c8fbdc1753c9cb85212d6619",
-        )
-        diffusion_model_weights_fpath = keras.utils.get_file(
-            origin="https://huggingface.co/fchollet/stable-diffusion/resolve/main/diffusion_model.h5",
-            file_hash="a5b2eea58365b18b40caee689a2e5d00f4c31dbcb4e1d58a9cf1071f55bbbd3a",
-        )
-        decoder_weights_fpath = keras.utils.get_file(
-            origin="https://huggingface.co/fchollet/stable-diffusion/resolve/main/decoder.h5",
-            file_hash="6d3c5ba91d5cc2b134da881aaa157b2d2adc648e5625560e3ed199561d0e39d5",
-        )
+        # text_encoder_weights_fpath = keras.utils.get_file(
+        #     origin="https://huggingface.co/fchollet/stable-diffusion/resolve/main/text_encoder.h5",
+        #     file_hash="d7805118aeb156fc1d39e38a9a082b05501e2af8c8fbdc1753c9cb85212d6619",
+        # )
+        # diffusion_model_weights_fpath = keras.utils.get_file(
+        #     origin="https://huggingface.co/fchollet/stable-diffusion/resolve/main/diffusion_model.h5",
+        #     file_hash="a5b2eea58365b18b40caee689a2e5d00f4c31dbcb4e1d58a9cf1071f55bbbd3a",
+        # )
+        # decoder_weights_fpath = keras.utils.get_file(
+        #     origin="https://huggingface.co/fchollet/stable-diffusion/resolve/main/decoder.h5",
+        #     file_hash="6d3c5ba91d5cc2b134da881aaa157b2d2adc648e5625560e3ed199561d0e39d5",
+        # )
+        #
+        # encoder_weights_fpath = keras.utils.get_file(
+        #     origin="https://huggingface.co/divamgupta/stable-diffusion-tensorflow/resolve/main/encoder_newW.h5",
+        #     file_hash="56a2578423c640746c5e90c0a789b9b11481f47497f817e65b44a1a5538af754",
+        # )
 
-        encoder_weights_fpath = keras.utils.get_file(
-            origin="https://huggingface.co/divamgupta/stable-diffusion-tensorflow/resolve/main/encoder_newW.h5",
-            file_hash="56a2578423c640746c5e90c0a789b9b11481f47497f817e65b44a1a5538af754",
-        )
+        text_encoder_weights_fpath = "C:/Users/xxxx/Downloads/text_encoder.h5"
+        diffusion_model_weights_fpath = "C:/Users/xxxx/Downloads/diffusion_model.h5"
+        decoder_weights_fpath = "C:/Users/xxxx/Downloads/decoder.h5"
+        encoder_weights_fpath = "C:/Users/xxxx/Downloads/encoder_newW.h5"
 
         text_encoder.load_weights(text_encoder_weights_fpath)
         diffusion_model.load_weights(diffusion_model_weights_fpath)

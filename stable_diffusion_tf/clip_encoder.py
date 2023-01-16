@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow_addons as tfa
+# import tensorflow_addons as tfa
 import numpy as np
 
 from .layers import quick_gelu
@@ -12,7 +12,7 @@ class CLIPAttention(keras.layers.Layer):
         self.embed_dim = 768
         self.num_heads = 12
         self.head_dim = self.embed_dim // self.num_heads
-        self.scale = self.head_dim**-0.5
+        self.scale = self.head_dim ** -0.5
         self.q_proj = keras.layers.Dense(self.embed_dim)
         self.k_proj = keras.layers.Dense(self.embed_dim)
         self.v_proj = keras.layers.Dense(self.embed_dim)
